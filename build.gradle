@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Cucumber
+    testImplementation 'io.cucumber:cucumber-java:7.15.0'
+    testImplementation 'io.cucumber:cucumber-junit:7.15.0'
+
+    // Selenium (Untuk Web UI)
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.18.1'
+
+    // Rest Assured (Untuk API)
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+
+    // JUnit (Untuk menjalankan tesnya)
+    testImplementation 'junit:junit:4.13.2'
+}
+
+// Pengaturan bawaan untuk menjalankan semua tes
+test {
+    systemProperty "cucumber.plugin", "pretty, html:target/cucumber-reports.html, json:target/cucumber-reports.json"
+}
+
+// ---------------------------------------------------------
+// 2 Gradle Task untuk @web dan @api
+// ---------------------------------------------------------
+
+task runWeb(type: Test) {
+    description = "Menjalankan semua test Web UI"
+    systemProperty "cucumber.filter.tags", "@web"
+    systemProperty "cucumber.plugin", "pretty, html:target/report-web.html, json:target/report-web.json"
+}
+
+task runApi(type: Test) {
+    description = "Menjalankan semua test API"
+    systemProperty "cucumber.filter.tags", "@api"
+    systemProperty "cucumber.plugin", "pretty, html:target/report-api.html, json:target/report-api.json"
+}

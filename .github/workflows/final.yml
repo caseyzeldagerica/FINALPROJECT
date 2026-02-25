@@ -1,0 +1,38 @@
+name: Final Project CI/CD
+
+# Jalan saat Pull Request ATAU Manual Trigger
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Ini adalah mantra sakti untuk memunculkan tombol "Run workflow" (Manual Trigger) di GitHub nanti!
+
+jobs:
+  test-otomatisasi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil Kode dari GitHub
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+
+      - name: Beri Izin Gradle
+        run: chmod +x gradlew
+
+      # Menjalankan 2 Gradle Task buatanmu!
+      - name: Eksekusi Robot API
+        run: ./gradlew runApi
+
+      - name: Eksekusi Robot Web
+        run: ./gradlew runWeb
+
+      - name: Upload Laporan HTML & JSON ke GitHub
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Laporan-Final-Project-Cece
+          path: target/
